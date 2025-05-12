@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   Injectable,
 } from "@nestjs/common";
+import { Request } from "express";
 import { Observable } from "rxjs";
 
 @Injectable()
@@ -12,11 +13,14 @@ export class SelfAuthGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const req = context.switchToHttp().getRequest();
+    const req: Request = context.switchToHttp().getRequest();
 
-    if (req.user.sub !== req.params.id)
-      throw new ForbiddenException("Ruxsat berilmagan");
+    if (
+      req.user.sub == req.params.id ||
+      ["admin", "creator"].includes(req.user.role)
+    )
+      return true;
 
-    return true;
+    throw new ForbiddenException("Ruxsat berilmagan");
   }
 }

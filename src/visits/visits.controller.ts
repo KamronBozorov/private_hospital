@@ -15,6 +15,7 @@ import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/common/guards/jwt-auth.guard";
 import { RoleAuthGuard } from "src/common/guards/role-auth.guard";
 import { Roles } from "src/common/decorators/role.decorator";
+import { SelfAuthGuard } from "src/common/guards/self-auth.guard";
 
 @ApiTags("visits")
 @Controller("visits")
@@ -25,7 +26,7 @@ export class VisitsController {
   @ApiOperation({ summary: "Yangi tashrif qo'shish" })
   @ApiResponse({ status: 201, description: "Tashrif muvaffaqiyatli qo'shildi" })
   @ApiResponse({ status: 400, description: "Noto'g'ri ma'lumotlar" })
-  @Roles("admin")
+  @Roles("admin", "creator")
   @UseGuards(RoleAuthGuard)
   @UseGuards(JwtAuthGuard)
   create(@Body() createVisitDto: CreateVisitDto) {
@@ -35,6 +36,9 @@ export class VisitsController {
   @Get()
   @ApiOperation({ summary: "Barcha tashriflarni olish" })
   @ApiResponse({ status: 200, description: "Tashriflar ro'yxati" })
+  @Roles("admin", "creator")
+  @UseGuards(RoleAuthGuard)
+  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.visitsService.findAll();
   }
@@ -54,6 +58,9 @@ export class VisitsController {
     description: "Tashrif muvaffaqiyatli yangilandi",
   })
   @ApiResponse({ status: 404, description: "Tashrif topilmadi" })
+  @Roles("admin", "creator")
+  @UseGuards(RoleAuthGuard)
+  @UseGuards(JwtAuthGuard)
   update(@Param("id") id: string, @Body() updateVisitDto: UpdateVisitDto) {
     return this.visitsService.update(+id, updateVisitDto);
   }
@@ -65,6 +72,9 @@ export class VisitsController {
     description: "Tashrif muvaffaqiyatli o'chirildi",
   })
   @ApiResponse({ status: 404, description: "Tashrif topilmadi" })
+  @Roles("admin", "creator")
+  @UseGuards(RoleAuthGuard)
+  @UseGuards(JwtAuthGuard)
   remove(@Param("id") id: string) {
     return this.visitsService.remove(+id);
   }

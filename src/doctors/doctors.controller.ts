@@ -6,11 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { DoctorsService } from "./doctors.service";
 import { CreateDoctorDto } from "./dto/create-doctor.dto";
 import { UpdateDoctorDto } from "./dto/update-doctor.dto";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { Roles } from "src/common/decorators/role.decorator";
+import { RoleAuthGuard } from "src/common/guards/role-auth.guard";
+import { JwtAuthGuard } from "src/common/guards/jwt-auth.guard";
 
 @ApiTags("doctors")
 @Controller("doctors")
@@ -24,6 +28,9 @@ export class DoctorsController {
     description: "Shifokor muvaffaqiyatli qo'shildi",
   })
   @ApiResponse({ status: 400, description: "Noto'g'ri ma'lumotlar" })
+  @Roles("creator", "admin")
+  @UseGuards(RoleAuthGuard)
+  @UseGuards(JwtAuthGuard)
   create(@Body() createDoctorDto: CreateDoctorDto) {
     return this.doctorsService.create(createDoctorDto);
   }
@@ -50,6 +57,9 @@ export class DoctorsController {
     description: "Shifokor muvaffaqiyatli yangilandi",
   })
   @ApiResponse({ status: 404, description: "Shifokor topilmadi" })
+  @Roles("creator", "admin")
+  @UseGuards(RoleAuthGuard)
+  @UseGuards(JwtAuthGuard)
   update(@Param("id") id: string, @Body() updateDoctorDto: UpdateDoctorDto) {
     return this.doctorsService.update(+id, updateDoctorDto);
   }
@@ -61,6 +71,9 @@ export class DoctorsController {
     description: "Shifokor muvaffaqiyatli o'chirildi",
   })
   @ApiResponse({ status: 404, description: "Shifokor topilmadi" })
+  @Roles("creator", "admin")
+  @UseGuards(RoleAuthGuard)
+  @UseGuards(JwtAuthGuard)
   remove(@Param("id") id: string) {
     return this.doctorsService.remove(+id);
   }

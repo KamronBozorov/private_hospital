@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { MedicalrecordsService } from "./medicalrecords.service";
 import { CreateMedicalrecordDto } from "./dto/create-medicalrecord.dto";
 import { UpdateMedicalrecordDto } from "./dto/update-medicalrecord.dto";
+import { JwtAuthGuard } from "src/common/guards/jwt-auth.guard";
 
 @ApiTags("medical-records")
 @Controller("medical-records")

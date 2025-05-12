@@ -46,6 +46,7 @@ export class StaffsService {
         staff.department_id,
       );
       let lic: any = "";
+
       if (staff.role === "doctor") {
         const doctor = await this.doctorService.findOne(staff.user_id);
         lic = doctor.license_number;

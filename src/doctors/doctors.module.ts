@@ -4,9 +4,10 @@ import { DoctorsController } from "./doctors.controller";
 import { SequelizeModule } from "@nestjs/sequelize";
 import { Doctor } from "./models/doctor.model";
 import { AuthModule } from "src/auth/auth.module";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
-  imports: [SequelizeModule.forFeature([Doctor])],
+  imports: [SequelizeModule.forFeature([Doctor]), JwtModule],
   controllers: [DoctorsController],
   providers: [DoctorsService],
   exports: [DoctorsService],

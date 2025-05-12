@@ -6,11 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { LabordersService } from "./laborders.service";
 import { CreateLaborderDto } from "./dto/create-laborder.dto";
 import { UpdateLaborderDto } from "./dto/update-laborder.dto";
+import { JwtAuthGuard } from "src/common/guards/jwt-auth.guard";
+import { RoleAuthGuard } from "src/common/guards/role-auth.guard";
+import { Roles } from "src/common/decorators/role.decorator";
+import { SelfAuthGuard } from "src/common/guards/self-auth.guard";
 
 @ApiTags("lab-orders")
 @Controller("lab-orders")
@@ -24,6 +29,9 @@ export class LabordersController {
     description: "Buyurtma muvaffaqiyatli qo'shildi",
   })
   @ApiResponse({ status: 400, description: "Noto'g'ri ma'lumotlar" })
+  @Roles("creator", "doctor")
+  @UseGuards(RoleAuthGuard)
+  @UseGuards(JwtAuthGuard)
   create(@Body() createLabOrderDto: CreateLaborderDto) {
     return this.labOrdersService.create(createLabOrderDto);
   }
@@ -31,6 +39,9 @@ export class LabordersController {
   @Get()
   @ApiOperation({ summary: "Barcha laboratoriya buyurtmalarini olish" })
   @ApiResponse({ status: 200, description: "Buyurtmalar ro'yxati" })
+  @Roles("creator", "doctor")
+  @UseGuards(RoleAuthGuard)
+  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.labOrdersService.findAll();
   }

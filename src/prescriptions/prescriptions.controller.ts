@@ -6,11 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { PrescriptionsService } from "./prescriptions.service";
 import { CreatePrescriptionDto } from "./dto/create-prescription.dto";
 import { UpdatePrescriptionDto } from "./dto/update-prescription.dto";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { JwtAuthGuard } from "src/common/guards/jwt-auth.guard";
+import { RoleAuthGuard } from "src/common/guards/role-auth.guard";
+import { Roles } from "src/common/decorators/role.decorator";
 
 @ApiTags("prescriptions")
 @Controller("prescriptions")
@@ -21,6 +25,9 @@ export class PrescriptionsController {
   @ApiOperation({ summary: "Yangi retsept qo'shish" })
   @ApiResponse({ status: 201, description: "Retsept muvaffaqiyatli qo'shildi" })
   @ApiResponse({ status: 400, description: "Noto'g'ri ma'lumotlar" })
+  @Roles("doctor")
+  @UseGuards(RoleAuthGuard)
+  @UseGuards(JwtAuthGuard)
   create(@Body() createPrescriptionDto: CreatePrescriptionDto) {
     return this.prescriptionsService.create(createPrescriptionDto);
   }
